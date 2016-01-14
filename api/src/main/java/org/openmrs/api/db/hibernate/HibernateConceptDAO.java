@@ -102,7 +102,8 @@ public class HibernateConceptDAO implements ConceptDAO {
 		// ConceptComplex.  If this happens, we need to clear the object from the cache
 		// and re-fetch it as a ConceptComplex
 		if (obj != null && !obj.getClass().equals(ConceptComplex.class)) {
-			sessionFactory.getCurrentSession().evict(obj); // remove from cache
+			// remove from cache
+			sessionFactory.getCurrentSession().evict(obj);
 			// session.get() did not work here, we need to perform a query to get a ConceptComplex
 			Query query = sessionFactory.getCurrentSession().createQuery("from ConceptComplex where conceptId = :conceptId")
 			        .setParameter("conceptId", conceptId);
@@ -503,7 +504,8 @@ public class HibernateConceptDAO implements ConceptDAO {
 		// ConceptNumeric.  If this happens, we need to clear the object from the cache
 		// and re-fetch it as a ConceptNumeric
 		if (obj != null && !obj.getClass().equals(ConceptNumeric.class)) {
-			sessionFactory.getCurrentSession().evict(obj); // remove from cache
+			// remove from cache
+			sessionFactory.getCurrentSession().evict(obj);
 			// session.get() did not work here, we need to perform a query to get a ConceptNumeric
 			Query query = sessionFactory.getCurrentSession().createQuery("from ConceptNumeric where conceptId = :conceptId")
 			        .setParameter("conceptId", i);
@@ -1263,8 +1265,8 @@ public class HibernateConceptDAO implements ConceptDAO {
 		
 		StringBuilder query = new StringBuilder();
 		if (!StringUtils.isBlank(drugName)) {
-			List<String> tokenizedName = Arrays.asList(drugName.trim().split("\\+"));
 			String escapedName = LuceneQuery.escapeQuery(drugName);
+			List<String> tokenizedName = Arrays.asList(escapedName.trim().split("\\+"));
 			query.append("(");
 			query.append(newNameQuery(tokenizedName, escapedName, searchKeywords));
 			query.append(")^0.3 OR drugReferenceMaps.conceptReferenceTerm.code:(\"").append(escapedName).append("\")^0.6");

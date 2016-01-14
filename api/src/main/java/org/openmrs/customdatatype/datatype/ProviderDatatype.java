@@ -9,24 +9,25 @@
  */
 package org.openmrs.customdatatype.datatype;
 
-import org.openmrs.OpenmrsObject;
-import org.openmrs.customdatatype.SerializingCustomDatatype;
+import org.apache.commons.lang.StringUtils;
+import org.openmrs.Provider;
+import org.openmrs.api.context.Context;
 
 /**
- * This is a superclass for custom datatypes for OpenmrsObjects
- * 
+ * This is a class for custom datatypes for providers
+ *
  * @since 2.0.0
  */
-public abstract class BaseOpenmrsDatatype<T extends OpenmrsObject> extends SerializingCustomDatatype<T> {
+public class ProviderDatatype extends BaseMetadataDatatype<Provider> {
 	
 	/**
-	 * @see org.openmrs.customdatatype.SerializingCustomDatatype#serialize(java.lang.Object)
-	 * @should return the uuid of the object
+	 * @see org.openmrs.customdatatype.SerializingCustomDatatype#deserialize(String)
+	 * @override
 	 */
-	public String serialize(T typedValue) {
-		if (typedValue == null) {
+	public Provider deserialize(String uuid) {
+		if (StringUtils.isBlank(uuid)) {
 			return null;
 		}
-		return typedValue.getUuid();
+		return Context.getProviderService().getProviderByUuid(uuid);
 	}
 }
